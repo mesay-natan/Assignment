@@ -321,4 +321,3 @@ Responses:
 
 - Stock changes are enforced using DB transactions + row locks for correctness under concurrency.
 - Transaction `unitPrice` is stored as a snapshot (product price may change later).
-- This README documents the current implemented routes. If you need the exact required routes from the prompt (e.g. `GET /status/:productId` at root), adjust the controller routes accordingly.
