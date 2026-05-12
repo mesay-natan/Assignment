@@ -1,25 +1,25 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductsService } from './products.service';
+import { TransactionService } from './transaction.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Product } from './entities/product.entity';
 import { DataSource } from 'typeorm';
+import { Transaction } from './entities/transaction.entity';
 
-describe('ProductsService', () => {
-  let service: ProductsService;
+describe('TransactionService', () => {
+  let service: TransactionService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ProductsService,
+        TransactionService,
         {
-          provide: getRepositoryToken(Product),
+          provide: getRepositoryToken(Transaction),
           useValue: {
             create: jest.fn(),
             save: jest.fn(),
             find: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
-            remove: jest.fn(),
+            delete: jest.fn(),
           },
         },
         {
@@ -30,6 +30,7 @@ describe('ProductsService', () => {
                 getRepository: jest.fn(() => ({
                   findOne: jest.fn(),
                   save: jest.fn(),
+                  create: jest.fn(),
                 })),
               }),
             ),
@@ -38,7 +39,7 @@ describe('ProductsService', () => {
       ],
     }).compile();
 
-    service = module.get<ProductsService>(ProductsService);
+    service = module.get<TransactionService>(TransactionService);
   });
 
   it('should be defined', () => {

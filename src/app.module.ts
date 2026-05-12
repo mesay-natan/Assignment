@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
+import { TransactionModule } from './transaction/transaction.module';
 import 'dotenv/config';
 
 @Module({
@@ -21,6 +22,7 @@ import 'dotenv/config';
     }),
     UsersModule,
     ProductsModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

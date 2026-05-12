@@ -1,4 +1,24 @@
 services:
+  api:
+      build:
+        context: .
+      container_name: ${API_CONTAINER_NAME:-assignment_api}
+      restart: unless-stopped
+      environment:
+        PORT: ${API_PORT:-3000}
+        DB_HOST: postgres
+        DB_PORT: 5432
+        DB_USER: ${POSTGRES_USER:-embed}
+        DB_PASS: ${POSTGRES_PASSWORD:-embed}
+        DB_NAME: ${POSTGRES_DB:-assignment}
+      depends_on:
+        postgres:
+          condition: service_healthy
+      ports:
+        - "${API_HOST_PORT:-3000}:${API_PORT:-3000}"
+      networks:
+        - assignment_net
+
   postgres:
       image: ${POSTGRES_IMAGE:-postgres:15}
       container_name: ${POSTGRES_CONTAINER_NAME:-assignment_postgres}
@@ -9,6 +29,11 @@ services:
         POSTGRES_DB: ${POSTGRES_DB:-assignment}
       ports:
         - "${POSTGRES_HOST_PORT:-5435}:${POSTGRES_PORT:-5432}"
+      healthcheck:
+        test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-embed} -d ${POSTGRES_DB:-assignment}"]
+        interval: 5s
+        timeout: 3s
+        retries: 20
       volumes:
         - pg_data:/var/lib/postgresql/data
         - ${POSTGRES_INIT_SQL_PATH:-./seed/postgres-init.sql}:/docker-entrypoint-initdb.d/00-postgres-init.sql:ro
